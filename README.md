@@ -25,6 +25,7 @@ Compile the extension:
 cd medoo
 zephir compile
 cd ext
+./configure --with-php-config=your-php-config-path
 make
 sudo make install
 edit php.ini, add medoo.so
