@@ -33,7 +33,7 @@ Compile the extension:
 External Links
 --------------
 * [Zephir Documentation](http://zephir-lang.com/)
-* [QQ ](141059677)
+* [QQ: 141059677]
 
 
 
