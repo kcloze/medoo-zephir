@@ -32,10 +32,9 @@ Compile the extension:
 
 External Links
 --------------
-* [Documentation](http://zephir-lang.com/)
-* [Official Blog](http://blog.zephir-lang.com/)
-* [Forum](https://forum.zephir-lang.com/)
-* [Twitter](https://twitter.com/zephirlang)
+* [Zephir Documentation](http://zephir-lang.com/)
+* [QQ ](141059677)
+
 
 
 License
