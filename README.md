@@ -5,31 +5,20 @@ make medoo to c extension for perfomance.
 
 Requirements
 ------------
-To compile zephir-parser:
 
-* [re2c](http://re2c.org/)
+* Installing Zephir
 
-To build the PHP extension:
+The Zephir compiler currently must be cloned from Github:
 
-* g++ >= 4.4/clang++ >= 3.x/vc++ 9
-* gnu make 3.81 or later
-* php development headers and tools
-* zephir
+$ git clone https://github.com/phalcon/zephir
+Run the Zephir installer (this compiles/creates the parser):
 
-You can install zephir using composer.
-Run `composer require phalcon/zephir`, run `./install` and then run `zephir`
-from your `bin-dir`. By default it is `./vendor/bin/zephir`.
-You can read more about composer binaries
-in it's [documentation](https://getcomposer.org/doc/articles/vendor-binaries.md).
-
-For global installation via composer you can use `composer global require`.
-Do not forget add `~/.composer/vendor/bin` into your `$PATH`.
-
-Also you can just clone zephir repository and run `./install`.
-For global installation add `-c` flag.
+$ cd zephir
+$ ./install -c
 
 #Install
 ------------------
+
 Compile the extension:
 
 ```bash
