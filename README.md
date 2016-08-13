@@ -22,7 +22,12 @@ $ ./install -c
 Compile the extension:
 
 ```bash
-./bin/zephir compile
+cd medoo
+zephir compile
+cd ext
+make
+sudo make install
+edit php.ini, add medoo.so
 ```
 
 #Usage
