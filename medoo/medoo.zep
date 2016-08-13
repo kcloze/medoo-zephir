@@ -94,7 +94,7 @@ class Medoo
 
     }
 
-        public function query(query) -> var | boolean
+        public function query(query)
     {
         if this->debug_mode {
             echo query;
@@ -140,7 +140,7 @@ class Medoo
     protected function columnPush(columns) -> string
     {
         var stack, key, value, matches;
-    
+
         if columns == "*" {
             return columns;
         }
@@ -165,7 +165,7 @@ class Medoo
         return implode(stack, ",");
     }
     
-    protected function arrayQuote(myArray) -> array
+    protected function arrayQuote(myArray) -> string
     {
         var temp, value;
     
@@ -176,7 +176,7 @@ class Medoo
         return implode(temp, ",");
     }
     
-    protected function innerConjunct(data, conjunctor, outer_conjunctor) -> array
+    protected function innerConjunct(data, conjunctor, outer_conjunctor) -> string
     {
         var haystack, value;
     
@@ -555,7 +555,7 @@ class Medoo
         return  count(lastId) > 1 ? lastId  : lastId[0];
     }
     
-    public function update(table, data, where = null) -> int
+    public function update(table, data, where = null)
     {
         var fields, key, value, column, matches, column_match;
     
@@ -593,12 +593,12 @@ class Medoo
         return this->exec("UPDATE " . this->tableQuote(table) . " SET " . implode(", ", fields) . this->whereClause(where));
     }
     
-    public function delete(table, where) -> int
+    public function delete(table, where)
     {
         return this->exec("DELETE FROM " . this->tableQuote(table) . this->whereClause(where));
     }
     
-    public function replace(table, columns, search = null, replace = null, where = null) -> int
+    public function replace(table, columns, search = null, replace = null, where = null)
     {
         var replace_query, column, replacements, replace_search, replace_replacement;
     
