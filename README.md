@@ -15,7 +15,7 @@ To build the PHP extension:
 * gnu make 3.81 or later
 * php development headers and tools
 * zephir
----------------
+
 You can install zephir using composer.
 Run `composer require phalcon/zephir`, run `./install` and then run `zephir`
 from your `bin-dir`. By default it is `./vendor/bin/zephir`.
