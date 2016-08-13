@@ -34,6 +34,6 @@
     "name": "medoo",
     "description": "medoo with zephir",
     "author": "kcloze",
-    "version": "0.0.1",
+    "version": "0.0.1.1",
     "verbose": true
 }

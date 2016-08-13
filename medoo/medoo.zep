@@ -142,7 +142,10 @@ class Medoo
         var stack, key, value, matches;
 
         if columns == "*" {
-            return columns;
+            return "*";
+        }
+        if typeof columns === "null" {
+            return "*";
         }
         if is_string(columns) {
             let columns =  [columns];
@@ -377,7 +380,7 @@ class Medoo
         var table_query, join_key, table_join, join_array, sub_table, relation, joins, key, value, table_name, table_match, column, matches;
     
         if preg_match("/([a-zA-Z0-9_\\-]*)\\s*\\(([a-zA-Z0-9_\\-]*)\\)/i", table, table_match){
-
+            var_dump(table_match);
 
             if isset table_match[1] && isset table_match[2] {
                 let table =  this->tableQuote(table_match[1]);
@@ -387,6 +390,7 @@ class Medoo
                 let table_query = table;
             }
             let join_key =  is_array(join) ? array_keys(join)  : null;
+            var_dump(join_key);
             if isset join_key[0] && strpos(join_key[0], "[") === 0 {
                 let table_join =  [];
                 let join_array =  [">" : "LEFT", "<" : "RIGHT", "<>" : "FULL", "><" : "INNER"];
@@ -485,7 +489,7 @@ class Medoo
     public function select(table, join, columns = null, where = null)
     {
         var column, is_single_column, query, stack, index, row, key, value, fetchMethod;
-    
+        
         let column =  where == null ? join  : columns;
         let is_single_column =  is_string(column) && column !== "*";
         let query =  this->query(this->selectContext(table, join, columns, where));
