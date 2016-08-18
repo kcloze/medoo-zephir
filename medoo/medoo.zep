@@ -378,86 +378,88 @@ class Medoo
     protected function selectContext(table, join, columns = null, where = null, column_fn = null) -> string
     {
         var table_query, join_key, table_join, join_array, sub_table, relation, joins, key, value, table_name, table_match, column, matches;
-    
-        if preg_match("/([a-zA-Z0-9_\\-]*)\\s*\\(([a-zA-Z0-9_\\-]*)\\)/i", table, table_match){
+        
+        if preg_match("/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i", table, table_match){
             var_dump(table_match);
 
-            if isset table_match[1] && isset table_match[2] {
+            //if isset table_match[1] && isset table_match[2] {
                 let table =  this->tableQuote(table_match[1]);
                 let table_query =  this->tableQuote(table_match[1]) . " AS " . this->tableQuote(table_match[2]);
-            } else {
+            //} 
+
+        }else {
                 let table =  this->tableQuote(table);
                 let table_query = table;
-            }
-            let join_key =  is_array(join) ? array_keys(join)  : null;
-            var_dump(join_key);
-            if isset join_key[0] && strpos(join_key[0], "[") === 0 {
-                let table_join =  [];
-                let join_array =  [">" : "LEFT", "<" : "RIGHT", "<>" : "FULL", "><" : "INNER"];
-                for sub_table, relation in join {
-                    if preg_match("/(\\[(\\<|\\>|\\>\\<|\\<\\>)\\])?([a-zA-Z0-9_\\-]*)\\s?(\\(([a-zA-Z0-9_\\-]*)\\))?/", sub_table, matches){
-
-                        if matches[2] != "" && matches[3] != "" {
-                            if is_string(relation) {
-                                let relation =  "USING (\"" . relation . "\")";
-                            }
-                            if is_array(relation) {
-                                // For ['column1', 'column2']
-                                if isset relation[0] {
-                                    let relation =  "USING (\"" . implode(relation, "\", \"") . "\")";
-                                } else {
-                                    let joins =  [];
-                                    for key, value in relation {
-                                        let joins[] =  ( strpos(key, ".") > 0 ? this->columnQuote(key)  : table . ".\"" . key . "\"") . " = " . this->tableQuote( isset matches[5] ? matches[5]  : matches[3]) . ".\"" . value . "\"";
-                                    }
-                                    let relation =  "ON " . implode(joins, " AND ");
-                                }
-                            }
-                            let table_name =  this->tableQuote(matches[3]) . " ";
-                            if isset matches[5] {
-                                let table_name .= "AS " . this->tableQuote(matches[5]) . " ";
-                            }
-                            let table_join[] =  join_array[matches[2]] . " JOIN " . table_name . relation;
+        }
+        let join_key =  is_array(join) ? array_keys(join)  : null;
+        var_dump(join_key);
+        if isset join_key[0] && strpos(join_key[0], "[") === 0 {
+            let table_join =  [];
+            let join_array =  [">" : "LEFT", "<" : "RIGHT", "<>" : "FULL", "><" : "INNER"];
+            for sub_table, relation in join {
+                if preg_match("/(\[(\<|\>|\>\<|\<\>)\])?([a-zA-Z0-9_\-]*)\s?(\(([a-zA-Z0-9_\-]*)\))?/", sub_table, matches){
+                    var_dump(sub_table);
+                    if matches[2] != "" && matches[3] != "" {
+                        if is_string(relation) {
+                            let relation =  "USING (\"" . relation . "\")";
                         }
+                        if is_array(relation) {
+                            // For ['column1', 'column2']
+                            if isset relation[0] {
+                                let relation =  "USING (\"" . implode(relation, "\", \"") . "\")";
+                            } else {
+                                let joins =  [];
+                                for key, value in relation {
+                                    let joins[] =  ( strpos(key, ".") > 0 ? this->columnQuote(key)  : table . ".\"" . key . "\"") . " = " . this->tableQuote( isset matches[5] ? matches[5]  : matches[3]) . ".\"" . value . "\"";
+                                }
+                                let relation =  "ON " . implode(joins, " AND ");
+                            }
+                        }
+                        let table_name =  this->tableQuote(matches[3]) . " ";
+                        if isset matches[5] {
+                            let table_name .= "AS " . this->tableQuote(matches[5]) . " ";
+                        }
+                        let table_join[] =  join_array[matches[2]] . " JOIN " . table_name . relation;
                     }
                 }
-                let table_query .= " " . implode(table_join, " ");
-            } else {
-                if is_null(columns) {
-                    if is_null(where) {
-                        if is_array(join) && column_fn {
-                            let where = join;
-                            let columns =  null;
-                        } else {
-                            let where =  null;
-                            let columns = join;
-                        }
-                    } else {
+            }
+            let table_query .= " " . implode(table_join, " ");
+        } else {
+            if is_null(columns) {
+                if is_null(where) {
+                    if is_array(join) && column_fn {
                         let where = join;
                         let columns =  null;
+                    } else {
+                        let where =  null;
+                        let columns = join;
                     }
                 } else {
-                    let where = columns;
-                    let columns = join;
-                }
-            }
-        }
-        if column_fn {
-            if column_fn == 1 {
-                let column = "1";
-                if is_null(where) {
-                    let where = columns;
+                    let where = join;
+                    let columns =  null;
                 }
             } else {
-                if empty(columns) {
-                    let columns = "*";
-                    let where = join;
-                }
-                let column =  column_fn . "(" . this->columnPush(columns) . ")";
+                let where = columns;
+                let columns = join;
+            }
+        }
+    
+    if column_fn {
+        if column_fn == 1 {
+            let column = "1";
+            if is_null(where) {
+                let where = columns;
             }
         } else {
-            let column =  this->columnPush(columns);
+            if empty(columns) {
+                let columns = "*";
+                let where = join;
+            }
+            let column =  column_fn . "(" . this->columnPush(columns) . ")";
         }
+    } else {
+        let column =  this->columnPush(columns);
+    }
         return "SELECT " . column . " FROM " . table_query . this->whereClause(where);
     }
     
