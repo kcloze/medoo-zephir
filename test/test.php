@@ -1,12 +1,17 @@
 <?php
 
+function refValue( $val )
+{
+    $ref = &$val;
+    return $ref;
+}
 $config = [
     // required
     'database_type' => 'mysql',
     'database_name' => 'test',
-    'server'        => '192.168.9.24',
-    'username'      => 'yongfu_b',
-    'password'      => '%#@SwEsdf43738',
+    'server'        => '127.0.0.1',
+    'username'      => 'test',
+    'password'      => '123kcloze',
     'charset'       => 'utf8',
 
     // [optional]
@@ -22,15 +27,15 @@ $config = [
 ];
 
 $database = new \Medoo\Medoo($config);
-// $result   = $database->select("users", "name", [
-//     "email" => "1468119720",
-// ]);
-$result = $database->select("users", "name");
+$result   = $database->select("users", "name", [
+     "email" => "1468119720",
+]);
+//$result = $database->select("users", "name");
 
 var_dump($result);
 var_dump($database->log());
-var_dump("----------------");
-$result = preg_match("/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i", "users", $table_match);
-var_dump($result, $table_match);
-$result = preg_match('/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i', "users", $table_match);
-var_dump($result, $table_match);
+// var_dump("----------------");
+// $result = preg_match("/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i", "users", $table_match);
+// var_dump($result, $table_match);
+// $result = preg_match('/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i', "users", $table_match);
+// var_dump($result, $table_match);

@@ -23,6 +23,8 @@ class Medoo
     protected option = [];
     // Variable
     protected logs = [];
+    protected columns;
+    protected stack;
     protected debug_mode = false;
     public function __construct(options = null)
     {
@@ -141,24 +143,24 @@ class Medoo
     {
         var stack, key, value, matches;
 
-        if columns == "*" {
+        if $this->columns == "*" {
             return "*";
         }
-        if typeof columns === "null" {
+        if typeof $this->columns === "null" {
             return "*";
         }
-        if is_string(columns) {
-            let columns =  [columns];
+        if is_string($this->columns) {
+            let $this->columns =  [$this->columns];
         }
         let stack =  [];
-        for key, value in columns {
+        for key, value in $this->columns {
             if is_array(value) {
                 let stack[] =  this->columnPush(value);
             } else {
-                if preg_match("/([a-zA-Z0-9_\\-\\.]*)\\s*\\(([a-zA-Z0-9_\\-]*)\\)/i", value, matches){
+                if preg_match("/([a-zA-Z0-9_\-\.]*)\s*\(([a-zA-Z0-9_\-]*)\)/i", value, matches){
                     if isset matches[1] && isset matches[2] {
                         let stack[] =  this->columnQuote(matches[1]) . " AS " . this->columnQuote(matches[2]);
-                        let columns[key] = matches[2];
+                        let $this->columns[key] = matches[2];
                     } else {
                         let stack[] =  this->columnQuote(value);
                     }
@@ -380,7 +382,6 @@ class Medoo
         var table_query, join_key, table_join, join_array, sub_table, relation, joins, key, value, table_name, table_match, column, matches;
         
         if preg_match("/([a-zA-Z0-9_\-]*)\s*\(([a-zA-Z0-9_\-]*)\)/i", table, table_match){
-            var_dump(table_match);
 
             //if isset table_match[1] && isset table_match[2] {
                 let table =  this->tableQuote(table_match[1]);
@@ -392,13 +393,11 @@ class Medoo
                 let table_query = table;
         }
         let join_key =  is_array(join) ? array_keys(join)  : null;
-        var_dump(join_key);
         if isset join_key[0] && strpos(join_key[0], "[") === 0 {
             let table_join =  [];
             let join_array =  [">" : "LEFT", "<" : "RIGHT", "<>" : "FULL", "><" : "INNER"];
             for sub_table, relation in join {
                 if preg_match("/(\[(\<|\>|\>\<|\<\>)\])?([a-zA-Z0-9_\-]*)\s?(\(([a-zA-Z0-9_\-]*)\))?/", sub_table, matches){
-                    var_dump(sub_table);
                     if matches[2] != "" && matches[3] != "" {
                         if is_string(relation) {
                             let relation =  "USING (\"" . relation . "\")";
@@ -443,7 +442,6 @@ class Medoo
                 let columns = join;
             }
         }
-    
     if column_fn {
         if column_fn == 1 {
             let column = "1";
@@ -471,19 +469,19 @@ class Medoo
             let sub_stack =  [];
             for sub_key, sub_value in value {
                 if is_array(sub_value) {
-                    let current_stack = stack[index][key];
+                    let current_stack = $this->stack[index][key];
                     this->dataMap(false, sub_key, sub_value, data, current_stack);
-                    let stack[index][key][sub_key] = current_stack[0][sub_key];
+                    let $this->stack[index][key][sub_key] = current_stack[0][sub_key];
                 } else {
                     this->dataMap(false, preg_replace("/^[\\w]*\\./i", "", sub_value), sub_key, data, sub_stack);
-                    let stack[index][key] = sub_stack;
+                    let $this->stack[index][key] = sub_stack;
                 }
             }
         } else {
             if index !== false {
-                let stack[index][value] = data[value];
+                let $this->stack[index][value] = data[value];
             } else {
-                let stack[key] = data[key];
+                let $this->stack[key] = data[key];
             }
         }
     }
